@@ -1,0 +1,64 @@
+<t t-name="HrAttendanceMyMainMenu">
+    <t t-call="HrAttendanceCardLayout">
+        <t t-set="bodyContent">
+            <t t-if="widget.employee">
+                <t t-set="checked_in" t-value="widget.employee.attendance_state=='checked_in'"/>
+
+                <t t-call="HrAttendanceUserBadge">
+                    <t t-set="userId" t-value="widget.employee.id"/>
+                    <t t-set="userName" t-value="widget.employee.name"/>
+                </t>
+                <body>
+                    <form>
+                        <br></br>
+                        <group>
+                            <!-- Project Selection -->
+                            <div class="form-control">
+                                <label for="project_id">Project:</label>
+                                <select class="form-control" name="project_id" id="projectselect">
+                                    <option value="" selected="selected">-- Select Option --</option>
+                                    <t t-foreach="widget.project_id" t-as="project">
+                                        <option t-att-value="project.id">
+                                            <t t-esc="project.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+
+                            <!-- Task Selection -->
+                            <div class="form-control">
+                                <label for="task_id">Task :</label>
+                                <select class="form-control" name="task_id" id="taskselect">
+                                    <option value="" selected="selected">-- Select Option --</option>
+                                    <!-- You can dynamically populate task options using JavaScript -->
+                                </select>
+                            </div>
+                            <div class="form-control">
+                                <label for="description">Description</label>
+                                <input type="text" id="description"/>
+                            </div>
+                        </group>
+                    </form>
+                </body>
+                <div class="flex-grow-1">
+                    <h1 class="mt-5" t-esc="widget.employee.name"/>
+                    <h3>
+                        <t t-if="!checked_in">Welcome!</t>
+                        <t t-else="">Want to check out?</t>
+                    </h3>
+                    <h4 class="mt0 mb0 text-muted" t-if="checked_in">Today's work hours:
+                        <span t-esc="widget.hours_today"/>
+                    </h4>
+                </div>
+
+                <t t-call="HrAttendanceCheckInOutButtons"/>
+            </t>
+            <div class="alert alert-warning" t-else="">
+                <b>Warning</b>
+                : Your user should be linked to an employee to use attendance.
+                <br/>
+                Please contact your administrator.
+            </div>
+        </t>
+    </t>
+</t>
