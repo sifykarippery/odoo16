@@ -33,10 +33,10 @@ odoo.define('custom_module.my_attendances', function (require) {
 
         // Custom method to update attendance based on project
         update_attendance_project: function () {
-            var self = this;
-            var project_value = document.getElementById("projectselect").value;
-            var task_value = document.getElementById("taskselect").value;
-            var description_value = document.getElementById("description").value;
+            const self = this;
+            let project_value = this.$("#projectselect").val();
+            let task_value = this.$("#taskselect").val();
+            let description_value = this.$("#description").val();
 
             // Prepare data for the RPC call
             var dict = {
@@ -62,7 +62,7 @@ odoo.define('custom_module.my_attendances', function (require) {
         // Custom method to handle task selection change
         task_domain_change: function () {
             var selectField = this.$('#taskselect');
-            var project = parseInt(document.getElementById("projectselect").value);
+            var project = parseInt(this.$("#projectselect").val());
 
             // Check if a project is selected
             if (project === '') {
