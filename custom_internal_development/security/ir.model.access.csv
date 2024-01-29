@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_month,account_month,model_account_month,base.group_user,1,1,1,1
+access_custom_actual_budget_report,custom_actual_budget_report,model_custom_actual_budget_report,base.group_user,1,1,1,1
+access_custom_actual.budget_report_line,custom_actual_budget_report_line,model_custom_actual_budget_report_line,base.group_user,1,1,1,1
