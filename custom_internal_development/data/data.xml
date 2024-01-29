@@ -1,0 +1,73 @@
+<odoo>
+
+        <record id="multiple_invoice_partner_mail_template" model="mail.template">
+            <field name="name">Multiple Invoice Email</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="email_from">paymentinfo@sample.com</field>
+            <field name="email_to">${object.partner_id.email}</field>
+<!--            <field name="partner_to">${object.partner_id.id}</field>-->
+            <field
+                    name="subject"
+            >PR-${object.partner_id.ref}-${object.paid_date.strftime('%d/%m/%Y')}-${object.partner_id.name}
+            </field>
+            <field
+                    name="body_html"
+            ><![CDATA[
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+Dear
+% if object.partner_id.parent_id:
+            ${object.partner_id.name} (${object.partner_id.parent_id.name}),
+        % else:
+            ${object.partner_id.name},
+        % endif
+<p>        Please find below the list of bills tagged against the payment on ${object.paid_date.strftime('%d/%m/%Y')} </p>
+<p>Attached details of invoices for your reference.</p>
+
+<table style="border-spacing: 0; border-collapse: collapse; width: 100%; text-align: center;">
+    <tr>
+        <th style="padding: 5px; border: 1px solid black;">Payment Date</th>
+        <th style="padding: 5px; border: 1px solid black;">Payment UTR</th>
+        <th style="padding: 5px; border: 1px solid black;">Odoo BILL NUMBER</th>
+        <th style="padding: 5px; border: 1px solid black;">Vendor BILL NUMBER</th>
+         <th style="padding: 5px; border: 1px solid black;">Basic AMT</th>
+         <th style="padding: 5px; border: 1px solid black;">IGST</th>
+         <th style="padding: 5px; border: 1px solid black;">CGST</th>
+         <th style="padding: 5px; border: 1px solid black;">SGST</th>
+          <th style="padding: 5px; border: 1px solid black;">Total Bill AMT</th>
+          <th style="padding: 5px; border: 1px solid black;">TDS</th>
+          <th style="padding: 5px; border: 1px solid black;">NET PAYABLE AMT</th>
+          <th style="padding: 5px; border: 1px solid black;">Paid AMT</th>
+    </tr>
+% for inv in ctx.payment_detail:
+    <tr>
+        <td style="padding: 5px; border: 1px solid black;">${format_date(inv['payment_date']) or ''}</td>
+        <td style="padding: 5px; border: 1px solid black;">${inv.payment_utr or ''}</td>
+        <td style="padding: 5px; border: 1px solid black;">${inv.invoice_number}</td>
+        <td style="padding: 5px; border: 1px solid black;">${inv.bill_no}</td>
+        <td style="padding: 5px; border: 1px solid black;">${format_amount(inv.basic_amount,object.currency_id)}</td>
+        <td style="padding: 5px; border: 1px solid black;">${'%.2f'% inv.igst}</td>
+        <td style="padding: 5px; border: 1px solid black;">${'%.2f'% inv.cgst}</td>
+        <td style="padding: 5px; border: 1px solid black;">${'%.2f'% inv.sgst}</td>
+        <td style="padding: 5px; border: 1px solid black;">${format_amount(inv.total_bill_amount,object.currency_id)}</td>
+        <td style="padding: 5px; border: 1px solid black;">${'%.2f'% inv.tds}</td>
+        <td style="padding: 5px; border: 1px solid black;">${format_amount(inv.net_payable_amount,object.currency_id)}</td>
+        <td style="padding: 5px; border: 1px solid black;">${format_amount(inv.paid_amount,object.currency_id)}</td>
+    </tr>
+% endfor
+
+</table>
+
+<p>Regards,</p>
+% if user.signature:
+<p>
+${user.signature | safe}
+</p>
+% endif
+</div>
+]]></field>
+            <field name="auto_delete" eval="True"/>
+
+        </record>
+</odoo>
